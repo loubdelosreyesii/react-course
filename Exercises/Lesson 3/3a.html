@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script>
+        console.log("Hello from HTML");
+    </script>
+    <!-- //External Library : outside our computer.
+    //React is an external library. -->
+    <script src="react-basics.js">
+    </script>
+    <!-- //Loads the React external library. -->
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <!-- //Loads the Babel external library -->
+     <!-- Babel is a tool that translates JSX(Javascript XML) to normal Javascript. -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <!-- Code below will be translated by Babel to normal Javascript. -->
+    <script type="text/babel">
+        function ClickButton(){
+
+            function sendClick(){
+                console.log('Clicked');
+            }
+
+            return(
+                <div>
+                    <button
+                        onClick={sendClick}
+                    >Clicked 0 times</button>
+                </div>
+            );
+        }
+        function App(){
+            return (
+                <>
+                    <ClickButton/>
+                </>
+            );
+        }
+        
+        const container = document.querySelector('.js-container');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App/>);
+
+    </script>
+  </body> 
+</html>

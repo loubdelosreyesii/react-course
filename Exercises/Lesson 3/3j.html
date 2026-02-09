@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    
+    <!-- //External Library : outside our computer.
+    //React is an external library. -->
+    <!-- //Loads the React external library. -->
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+    <!-- //Loads the Babel external library -->
+     <!-- Babel is a tool that translates JSX(Javascript XML) to normal Javascript. -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <!-- Code below will be translated by Babel to normal Javascript. -->
+    <script type="text/babel">
+    
+      function ChatInput({chatMessages, setChatMessages}){
+        //Current Data and the Updater function using Array Destructuring
+        const [inputText, setInputText] = React.useState('');
+
+        function saveInputText(event){
+          setInputText(event.target.value);
+        }
+        function handleKeyDown(event){
+            if(event.key==='Enter')
+                sendMessage();
+            else if(event.key==='Escape')
+            {
+                setInputText('');
+                return;
+            }
+        }
+        function sendMessage(){
+
+          const newChatMessages=[
+              ...chatMessages, //creates a copy of an array
+              {
+                message : inputText,
+                sender : 'user',
+                id: crypto.randomUUID()
+              }
+          ];
+
+          setChatMessages(newChatMessages);
+
+          const response = Chatbot.getResponse(inputText);
+          
+          setChatMessages([
+              ...newChatMessages, //creates a copy of an array
+              {
+                message : response,
+                sender : 'robot',
+                id: crypto.randomUUID()
+              }
+          ]);
+
+
+          setInputText('');
+        }
+        return (
+          <>  
+            <input 
+              placeholder="Send a message to Chatbot" 
+              size="30"
+              onChange= {saveInputText}
+              onKeyDown={handleKeyDown}
+              value={inputText} // this is a controlled input
+            />
+            <button
+              onClick={sendMessage}
+            >Send</button>
+          </>
+        );
+
+      }
+
+      function ChatMessage({message,sender}){
+        return(
+            <div>
+            {sender === 'robot' && (
+              <img src="robot.png" width="50"/>
+            )}
+
+            {message}
+
+            {sender ==='user' && (
+              <img src="user.png" width="50"/>
+            )}
+          </div>
+        );
+        
+        
+      }
+
+      function ChatMessages({chatMessages})
+      {
+        return(
+          <>
+          {
+            chatMessages.map((chatMessage)=>{
+              return (
+                <ChatMessage
+                  message= {chatMessage.message}
+                  sender= {chatMessage.sender}
+                  key={chatMessage.id}
+                />
+              );
+            })
+          }
+          </>
+        );
+      }
+      function App(){
+        
+        const [chatMessages,setChatMessages]= React.useState([{
+          message:'hello chatbot',
+          sender:'user',
+          id:'id1'
+        },{
+          message:'Hello! How can I help you?',
+          sender:'robot',
+          id:'id2'
+        },{
+          message:'Can you get me todays date?',
+          sender:'user',
+          id:'id3'
+        },{
+          message:'Today is February 8',
+          sender:'robot',
+          id:'id4'
+        }]);
+
+        return (
+          <>
+            <ChatInput
+              chatMessages={chatMessages}
+              setChatMessages = {setChatMessages}
+            />
+            <ChatMessages
+              chatMessages={chatMessages}
+            />
+          </>
+        );
+      }
+
+    const container  = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App/>);
+    
+    </script>
+      <!-- 
+      <> This is a fragment declaration 
+      </> groups elements together without creating a div.
+      <{NameOfFunction}/> Component Syntax
+      Props = Properties : make our component reusable. 
+      State = data that is connected to the HTML.
+      *Should not modify the data directly. We should always create a copy, and then modify the copy.
+              //The current data.
+        //const chatMessages = array[0];
+        //function that updates above data. also known as Updater Function
+        //const  setChatMessages = array[1];
+        // ... : Spread Operator takes the values in an array, and copies them into a new array.
+        
+        //Array Destructuring
+        //const [chatMessages,setChatMessages] = array;
+        //controlled inputs
+      -->
+
+  </body> 
+</html>
